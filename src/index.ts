@@ -6,6 +6,7 @@ import morgan from "morgan";
 import cors from "cors";
 import { dbConnection } from "./database/config";
 const app = express();
+dbConnection();
 
 app.use(express.static("public"));
 
@@ -18,4 +19,3 @@ app.use("/api/events", routerEvents);
 app.listen(config.PORT, () => {
   console.log(`Express corriendo en el puerto ${config.PORT}`);
 });
-dbConnection();
