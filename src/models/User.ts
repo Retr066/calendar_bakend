@@ -1,4 +1,10 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Document } from "mongoose";
+
+interface UserProps extends Document {
+  fullName: string;
+  email: string;
+  password: string;
+}
 
 const UserShema = new Schema(
   {
@@ -18,11 +24,6 @@ const UserShema = new Schema(
       trim: true,
       required: true,
     },
-    verifyPassword: {
-      type: String,
-      trim: true,
-      required: true,
-    },
   },
   {
     timestamps: true,
@@ -30,4 +31,4 @@ const UserShema = new Schema(
   }
 );
 
-export default model("User", UserShema);
+export default model<UserProps>("User", UserShema);

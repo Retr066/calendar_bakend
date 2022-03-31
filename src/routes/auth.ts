@@ -3,6 +3,7 @@ import { createUser, Login, renovateToken } from "../controllers/authController"
 import { check } from "express-validator";
 import { fieldsValidator } from "../middlewares/fieldsValidator";
 import User from "../models/User";
+import { validatorJWT } from "../middlewares/validator-jwt";
 const router = Router();
 //rutas para auth con el path de host + api/auth
 router.post(
@@ -21,9 +22,8 @@ router.post(
       .isEmail()
       .withMessage("Es email es obligatorio")
       .custom(async (email) => {
-        User.findOne({ email }).then((user) => {
-          if (user) return Promise.reject();
-        });
+        const emailCheck = await User.findOne({ email });
+        if (emailCheck) return Promise.reject();
       })
       .withMessage("Email ya se encuentra en uso"),
 
@@ -49,6 +49,6 @@ router.post(
   Login
 );
 
-router.get("/renew", renovateToken);
+router.get("/renew", validatorJWT, renovateToken);
 
 export default router;
