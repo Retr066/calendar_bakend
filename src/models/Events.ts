@@ -45,4 +45,10 @@ const EventShema = new Schema(
   }
 );
 
+EventShema.method("toJSON", function () {
+  const { _id, ...object } = this.toObject();
+  object.id = _id;
+  return object;
+});
+
 export default model<EventsProps>("Event", EventShema);
