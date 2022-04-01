@@ -12,28 +12,39 @@ router.post(
     check("fullName")
       .not()
       .isEmpty()
-      .isString()
       .withMessage("El nombre completo es obligatorio")
       .isLength({ min: 3, max: 100 })
       .withMessage("El nombre debe ser mayor de 3 caracteres y menor a 100")
       .matches(/^[a-zA-Z]+(\s*[a-zA-Z]*)*[a-zA-Z]+$/)
       .withMessage("El nombre tiene que ser letras no números"),
     check("email")
-      .isEmail()
+      .not()
+      .isEmpty()
       .withMessage("Es email es obligatorio")
+      .isEmail()
+      .withMessage("El formato es el incorrecto")
       .custom(async (email) => {
         const emailCheck = await User.findOne({ email });
         if (emailCheck) return Promise.reject();
       })
       .withMessage("Email ya se encuentra en uso"),
 
-    check("password", "El password debe ser mayor a 6 caracteres y máximo de 100").isLength({ min: 6, max: 100 }),
-    check("verifyPassword").custom((value, { req }) => {
-      if (value !== req.body.password) {
-        throw new Error("La confirmación de la contraseña no coincide con la contraseña");
-      }
-      return true;
-    }),
+    check("password")
+      .not()
+      .isEmpty()
+      .withMessage("Es email es obligatorio")
+      .isLength({ min: 6, max: 100 })
+      .withMessage("El password debe ser mayor a 6 caracteres y máximo de 100"),
+    check("verifyPassword")
+      .not()
+      .isEmpty()
+      .withMessage("La Verificación de password es obligatorio")
+      .custom((value, { req }) => {
+        if (value !== req.body.password) {
+          throw new Error("La confirmación de la contraseña no coincide con la contraseña");
+        }
+        return true;
+      }),
     fieldsValidator,
   ],
   createUser
@@ -42,8 +53,8 @@ router.post(
 router.post(
   "/",
   [
-    check("email", "Es email es obligatorio").isEmail(),
-    check("password", "El password debe ser mayor a 6 caracteres").isLength({ min: 6 }),
+    check("email").not().isEmpty().withMessage("El nombre completo es obligatorio").isEmail().withMessage("El formato es el incorrecto"),
+    check("password", "El password debe ser mayor a 6 caracteres").not().isEmpty().isLength({ min: 6 }),
     fieldsValidator,
   ],
   Login

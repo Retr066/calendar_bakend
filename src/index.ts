@@ -8,7 +8,7 @@ import { dbConnection } from "./database/config";
 const app = express();
 dbConnection();
 
-app.use(express.static("./src/public"));
+app.use(express.static("public"));
 app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());

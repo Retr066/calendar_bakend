@@ -15,7 +15,7 @@ export const createdEvent: RequestHandler = async (req: Request, res: Response) 
   try {
     event.user = req.body.uid;
     const eventSave = await event.save();
-    console.log(eventSave.id);
+
     return res.status(201).json({
       ok: true,
       msg: "Evento creado satisfactoriamente",

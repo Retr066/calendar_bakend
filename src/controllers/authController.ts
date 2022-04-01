@@ -30,11 +30,11 @@ export const Login: RequestHandler = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    console.log(user?.id);
+
     if (!user) {
       return res.status(400).json({
         ok: false,
-        msg: "El usuario no existe con ese email",
+        msg: "El email o contraseña son incorrectos",
       });
     }
     const validPassword: boolean = bcrypt.compareSync(password, user.password);
@@ -47,7 +47,7 @@ export const Login: RequestHandler = async (req, res) => {
     const token = await generarJWT(user.id, user.fullName);
     res.status(200).json({
       ok: true,
-      msg: "Logueado Satisfactoriamente",
+      msg: "El email o contraseña son incorrectos",
       uid: user.id,
       fullName: user.fullName,
       token,
@@ -70,5 +70,7 @@ export const renovateToken: RequestHandler = async (req, res) => {
     ok: true,
     msg: "token renovado",
     token,
+    uid,
+    fullName,
   });
 };
